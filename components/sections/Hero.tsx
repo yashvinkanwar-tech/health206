@@ -6,11 +6,23 @@ import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen bg-slate-950 text-white flex items-center pt-24">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+    <section className="relative overflow-hidden min-h-screen bg-slate-950 text-white flex items-center pt-24">
+
+  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <Image
+      src="/logos/health206-logo.png"
+      alt="Health 206 Background"
+      width={1000}
+      height={1000}
+      className="absolute right-[-150px] top-1/2 -translate-y-1/2 opacity-5 blur-sm scale-125"
+      priority
+    />
+  </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
 
         {/* Left Side */}
         <div>
+          <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-500/10 blur-[120px] rounded-full"></div>
 
           <p className="text-cyan-400 uppercase tracking-[6px] text-sm font-semibold">
             Future of Healthcare
@@ -74,18 +86,7 @@ export default function Hero() {
 
         {/* Right Side */}
 
-        <div className="flex justify-center">
-
-          <Image
-            src="/logos/health206-logo.png"
-            alt="Health 206"
-            width={450}
-            height={450}
-            priority
-            className="drop-shadow-[0_0_60px_rgba(6,182,212,.45)]"
-          />
-
-        </div>
+        
 
       </div>
     </section>
