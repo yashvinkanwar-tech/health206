@@ -461,7 +461,7 @@ drop policy if exists "insurance_storage_delete_own" on storage.objects;
 create policy "insurance_storage_delete_own" on storage.objects
   for delete using (
     bucket_id = 'insurance-documents'
-    and auth.uid()::text = (storage.foldername(name))[1]
+    and auth.uid()::text = (storage.foldername(name))[1] 
   );
 
 -- ============================================================================
