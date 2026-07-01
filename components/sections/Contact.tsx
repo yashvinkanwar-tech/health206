@@ -1,8 +1,55 @@
 "use client";
 
+import { useState } from "react";
 import { Mail, MapPin } from "lucide-react";
 
 export default function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong.");
+      }
+
+      setSuccess("Your message has been sent successfully.");
+
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err: any) {
+      setError(err.message || "Unable to send message.");
+    }
+
+    setLoading(false);
+  }
+
   return (
     <section
       id="contact"
@@ -16,13 +63,12 @@ export default function Contact() {
           </h2>
 
           <p className="mt-4 text-slate-400">
-            We'd love to hear from you. Reach out anytime.
+            We'd love to hear from you.
           </p>
         </div>
 
         <div className="mt-16 grid gap-10 lg:grid-cols-2">
 
-          {/* Contact Information */}
           <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8">
 
             <h3 className="mb-8 text-2xl font-semibold">
@@ -32,14 +78,16 @@ export default function Contact() {
             <div className="space-y-6">
 
               <div className="flex items-center gap-4">
-                <Mail className="text-cyan-400" size={24} />
+                <Mail className="text-cyan-400" />
 
                 <div>
-                  <p className="text-slate-400">Email</p>
+                  <p className="text-slate-400">
+                    Email
+                  </p>
 
                   <a
                     href="mailto:info@health206.com"
-                    className="text-lg text-white hover:text-cyan-400"
+                    className="text-white hover:text-cyan-400"
                   >
                     info@health206.com
                   </a>
@@ -47,52 +95,79 @@ export default function Contact() {
               </div>
 
               <div className="flex items-center gap-4">
-                <MapPin className="text-cyan-400" size={24} />
+                <MapPin className="text-cyan-400" />
 
                 <div>
-                  <p className="text-slate-400">Location</p>
+                  <p className="text-slate-400">
+                    Location
+                  </p>
 
-                  <p className="text-white">
+                  <p>
                     Gurugram, Haryana, India
                   </p>
                 </div>
               </div>
 
             </div>
+
           </div>
 
-          {/* Contact Form */}
           <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8">
 
             <h3 className="mb-6 text-2xl font-semibold">
               Send us a Message
             </h3>
 
-            <form className="space-y-5">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
+            >
 
               <input
                 type="text"
                 placeholder="Your Name"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white"
               />
 
               <input
                 type="email"
                 placeholder="Your Email"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white"
               />
 
               <textarea
                 rows={5}
                 placeholder="Your Message"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white"
               />
+
+              {success && (
+                <p className="text-green-400">
+                  {success}
+                </p>
+              )}
+
+              {error && (
+                <p className="text-red-400">
+                  {error}
+                </p>
+              )}
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-cyan-500 py-3 font-semibold text-white transition hover:bg-cyan-400"
+                disabled={loading}
+                className="w-full rounded-xl bg-cyan-500 py-3 font-semibold text-white hover:bg-cyan-400 disabled:opacity-60"
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
 
             </form>
